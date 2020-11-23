@@ -163,13 +163,14 @@ int main(int argc, char** argv){
 				else if(i.second == -2 && cidIt != cidM.end()){
 					curWrkspcData.resize(fRow);
 					curWrkspcData.push_back(cidIt->second.at(i.first));			
-					fRow++;		
+						
 				}
 			}
 		}
 		catch(exception& e){
 			if(debug == true) cout << "Check line " << fColumn << " in " << wrkspcFName << " "  << e.what() << "\n";
 		}
+		fRow++;
 		for(const auto &i : curWrkspcData) outCsv << i << ",";
 		outCsv << "\n";
 	}

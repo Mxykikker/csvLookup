@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 
 	for(auto i = v1.begin(); i != v1.end(); i++){
 		if(*i == "-h" || *i == "--help"){
-			cout << "Syntax: -p <primaryTable.csv> -l <LookUpTable.csv> -o <outputTable.csv> -d <debug> -f <pre post inline >";
+			cout << "Syntax: -p <primaryTable.csv> -l <LookUpTable.csv> -o <outputTable.csv> -d <debug> -f <pre post inline>\n";
 			return 0;
 		}
 		else if(*i == "-p"){
@@ -84,38 +84,39 @@ int main(int argc, char** argv){
 		}
 	}
 
-	v1.clear();
 	
 	getline(cidCsv, line);
+	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	v1 = split(line, ',');
 
 	getline(wrkspcCsv, line);
+	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	v2 = split(line, ',');
 
 	fRow = v2.size();
 
 	v3.resize(v1.size() + v2.size());
-	for(auto i = v1.begin(); i != v1.end(); i++)
-    	if(find(v2.begin(), v2.end(), *i) != v2.end()) v3.push_back(*i);
+	for(auto i = v1.begin(); i != v1.end(); i++) if(find(v2.begin(), v2.end(), *i) != v2.end()) v3.push_back(*i);
     
 	v3.erase(remove(v3.begin(), v3.end(), ""), v3.end());
-	if(fLocSearch == true) for(const auto &i : v3) dTest.insert(pair<int, int>(distance(v1.begin(), find(v1.begin(), v1.end(), i)), distance(v2.begin(), find(v2.begin(), v2.end(), i))));
-
-	if(fLocSpec == true) for(const auto &i :v1) dTest.insert(pair<int, int>(distance(v1.begin(), find(v1.begin(), v1.end(), i)), fLoc));
-
-	getline(cidCsv, line);
-	v1 = split(line, ',');
+	for(const auto &i : v3) dTest.insert(pair<int, int>(distance(v1.begin(), find(v1.begin(), v1.end(), i)), distance(v2.begin(), find(v2.begin(), v2.end(), i))));
 
 	getline(wrkspcCsv, line);
+	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	v2 = split(line, ',');
 
 	for(const auto &i : dTest){
 		if(v2.at(i.second) != ""){
 			cidIndex = i.first;
 			wrkIndex = i.second;
-			dTest.erase(i.first);
 		}
 	}
+
+	if(fLocSpec == true) for(const auto &i :v1) dTest.insert(pair<int, int>(distance(v1.begin(), find(v1.begin(), v1.end(), i)), fLoc));
+	dTest.erase(cidIndex);
 
 	cidCsv.clear();
 	cidCsv.seekg(0);
@@ -156,15 +157,14 @@ int main(int argc, char** argv){
 
 		try{
 			for(const auto &i : dTest){
-				if(i.second >= 0)
-					curWrkspcData[i.second] = cidIt->second[i.first];
-				else if(i.second == -1)
+				if(i.second >= 0 && cidIt != cidM.end())
+					curWrkspcData[i.second] = cidIt->second.at(i.first);
+				else if(i.second == -1 && cidIt != cidM.end())
 					curWrkspcData.insert(curWrkspcData.begin(), cidIt->second.at(i.first));
-				else if(i.second == -2){
+				else if(i.second == -2 && cidIt != cidM.end()){
 					curWrkspcData.resize(fRow);
 					curWrkspcData.push_back(cidIt->second.at(i.first));					
 				}
-
 			}
 		}
 		catch(exception& e){
@@ -173,4 +173,5 @@ int main(int argc, char** argv){
 		for(const auto &i : curWrkspcData) outCsv << i << ",";
 		outCsv << "\n";
 	}
+
 }

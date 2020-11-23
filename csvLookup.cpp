@@ -161,16 +161,14 @@ int main(int argc, char** argv){
 				else if(i.second == -1 && cidIt != cidM.end())
 					curWrkspcData.insert(curWrkspcData.begin(), cidIt->second.at(i.first));
 				else if(i.second == -2 && cidIt != cidM.end()){
-					curWrkspcData.resize(fRow);
-					curWrkspcData.push_back(cidIt->second.at(i.first));			
-						
+					if(curWrkspcData.size() < fRow) curWrkspcData.resize(fRow);
+					curWrkspcData.push_back(cidIt->second.at(i.first));
 				}
 			}
 		}
 		catch(exception& e){
 			if(debug == true) cout << "Check line " << fColumn << " in " << wrkspcFName << " "  << e.what() << "\n";
 		}
-		fRow++;
 		for(const auto &i : curWrkspcData) outCsv << i << ",";
 		outCsv << "\n";
 	}

@@ -162,7 +162,8 @@ int main(int argc, char** argv){
 					curWrkspcData.insert(curWrkspcData.begin(), cidIt->second.at(i.first));
 				else if(i.second == -2 && cidIt != cidM.end()){
 					curWrkspcData.resize(fRow);
-					curWrkspcData.push_back(cidIt->second.at(i.first));					
+					curWrkspcData.push_back(cidIt->second.at(i.first));			
+					fRow++;		
 				}
 			}
 		}

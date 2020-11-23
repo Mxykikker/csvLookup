@@ -83,7 +83,6 @@ int main(int argc, char** argv){
 			}
 		}
 	}
-
 	
 	getline(cidCsv, line);
 	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
@@ -157,7 +156,7 @@ int main(int argc, char** argv){
 
 		try{
 			for(const auto &i : dTest){
-				if(i.second >= 0 && cidIt != cidM.end())
+				if(i.second >= 0 && cidIt != cidM.end() && fLocSearch == true)
 					curWrkspcData[i.second] = cidIt->second.at(i.first);
 				else if(i.second == -1 && cidIt != cidM.end())
 					curWrkspcData.insert(curWrkspcData.begin(), cidIt->second.at(i.first));
@@ -173,5 +172,4 @@ int main(int argc, char** argv){
 		for(const auto &i : curWrkspcData) outCsv << i << ",";
 		outCsv << "\n";
 	}
-
 }

@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 
 	for(auto i = v1.begin(); i != v1.end(); i++){
 		if(*i == "-h" || *i == "--help"){
-			cout << "Syntax: -p <primaryTable.csv> -l <LookUpTable.csv> -o <outputTable.csv> -d <debug> -f <pre post inline >";
+			cout << "Syntax: -p <primaryTable.csv> -l <LookUpTable.csv> -o <outputTable.csv> -d <debug> -f <pre post inline>\n";
 			return 0;
 		}
 		else if(*i == "-p"){
@@ -83,13 +83,15 @@ int main(int argc, char** argv){
 			}
 		}
 	}
-
-	v1.clear();
 	
 	getline(cidCsv, line);
+	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	v1 = split(line, ',');
 
 	getline(wrkspcCsv, line);
+	line.erase(remove(line.begin(), line.end(), '\n'), line.end());
+	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	v2 = split(line, ',');
 
 	fRow = v2.size();

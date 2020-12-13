@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 	int fColumn = 0, fRow = 0, fLoc = 0, cidIndex = 0, wrkIndex = 0;
 	bool debug = false, fLocSpec = false, fLocSearch = false;
 
-	for(auto i = v1.begin(); i != v1.end(); i++){
+	for(auto i = v1.begin(); i != v1.end(); ++i){
 		if(*i == "-h" || *i == "--help"){
 			cout << "Syntax: -p <primaryTable.csv> -l <LookUpTable.csv> -o <outputTable.csv> -d <debug> -f <pre post inline>\n";
 			return 0;
@@ -66,7 +66,7 @@ int main(int argc, char** argv){
 			debug = true;
 		}
 		else if(*i == "-f"){
-			for(auto j = i; j != v1.end(); j++){
+			for(auto j = i; j != v1.end(); ++j){
 				if(*j == "inline")
 					fLocSearch = true;
 				else if(fLocSpec == false){
@@ -151,6 +151,7 @@ int main(int argc, char** argv){
 		line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 
 		vector<string> curWrkspcData = split(line, ',');
+		if(curWrkspcData.size() < fRow) curWrkspcData.resize(fRow);
 
 		map<string, vector<string>>::iterator cidIt = cidM.find(curWrkspcData.at(wrkIndex));
 
@@ -161,7 +162,6 @@ int main(int argc, char** argv){
 				else if(i.second == -1 && cidIt != cidM.end())
 					curWrkspcData.insert(curWrkspcData.begin(), cidIt->second.at(i.first));
 				else if(i.second == -2 && cidIt != cidM.end()){
-					if(curWrkspcData.size() < fRow) curWrkspcData.resize(fRow);
 					curWrkspcData.push_back(cidIt->second.at(i.first));
 				}
 			}
@@ -169,7 +169,10 @@ int main(int argc, char** argv){
 		catch(exception& e){
 			if(debug == true) cout << "Check line " << fColumn << " in " << wrkspcFName << " "  << e.what() << "\n";
 		}
-		for(const auto &i : curWrkspcData) outCsv << i << ",";
+		for(auto i = curWrkspcData.begin(); i != curWrkspcData.end(); ++i){
+			outCsv << i;
+			if(next(i) != curWrkspcData.end()) outCsv << ",";
+		} 
 		outCsv << "\n";
 	}
 }

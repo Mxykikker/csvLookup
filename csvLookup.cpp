@@ -170,9 +170,9 @@ int main(int argc, char** argv){
 			if(debug == true) cout << "Check line " << fColumn << " in " << wrkspcFName << " "  << e.what() << "\n";
 		}
 		for(auto i = curWrkspcData.begin(); i != curWrkspcData.end(); ++i){
-			outCsv << i;
+			outCsv << *i;
 			if(next(i) != curWrkspcData.end()) outCsv << ",";
 		} 
 		outCsv << "\n";
 	}
-}
+} 
